@@ -1,0 +1,170 @@
+[gd_scene load_steps=17 format=2]
+
+[ext_resource path="res://Worm.gd" type="Script" id=1]
+[ext_resource path="res://worm1.png" type="Texture" id=2]
+[ext_resource path="res://Fffrorwa.tres" type="DynamicFont" id=3]
+[ext_resource path="res://worm/jump.gd" type="Script" id=4]
+[ext_resource path="res://worm/walk.gd" type="Script" id=5]
+[ext_resource path="res://StateMachine/StateMachine.gd" type="Script" id=6]
+[ext_resource path="res://worm/idle.gd" type="Script" id=7]
+[ext_resource path="res://worm/hurt.gd" type="Script" id=8]
+[ext_resource path="res://worm/air.gd" type="Script" id=9]
+[ext_resource path="res://worm/die.gd" type="Script" id=10]
+[ext_resource path="res://worm/drown.gd" type="Script" id=11]
+[ext_resource path="res://arrow.png" type="Texture" id=12]
+[ext_resource path="res://cross-hair.png" type="Texture" id=13]
+
+[sub_resource type="CapsuleShape2D" id=1]
+radius = 6.09762
+height = 4.28598
+
+[sub_resource type="Animation" id=2]
+resource_name = "idle"
+length = 0.2
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("icon:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ 0, 1 ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "walk"
+length = 0.2
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("icon:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ 2, 1 ]
+}
+
+[node name="worm" type="KinematicBody2D"]
+collision_layer = 2
+script = ExtResource( 1 )
+jump_impulse = Vector2( 120, 200 )
+health = 69
+
+[node name="icon" type="Sprite" parent="."]
+texture = ExtResource( 2 )
+hframes = 3
+frame = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0.44545, 0 )
+shape = SubResource( 1 )
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource( 6 )
+
+[node name="idle" type="Node" parent="StateMachine"]
+script = ExtResource( 7 )
+
+[node name="walk" type="Node" parent="StateMachine"]
+script = ExtResource( 5 )
+
+[node name="jump" type="Node" parent="StateMachine"]
+script = ExtResource( 4 )
+
+[node name="air" type="Node" parent="StateMachine"]
+script = ExtResource( 9 )
+
+[node name="hurt" type="Node" parent="StateMachine"]
+script = ExtResource( 8 )
+
+[node name="die" type="Node" parent="StateMachine"]
+script = ExtResource( 10 )
+
+[node name="drown" type="Node" parent="StateMachine"]
+script = ExtResource( 11 )
+
+[node name="HealthLabel" type="Label" parent="."]
+margin_left = -10.6303
+margin_top = -33.7867
+margin_right = 14.3696
+margin_bottom = -8.78674
+grow_horizontal = 2
+grow_vertical = 2
+custom_fonts/font = ExtResource( 3 )
+custom_colors/font_outline_modulate = Color( 0, 0, 0, 1 )
+text = "112
+"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NameLabel" type="Label" parent="HealthLabel"]
+anchor_right = 1.0
+margin_left = -0.0743504
+margin_top = -14.5678
+margin_right = -0.0743008
+margin_bottom = 10.4322
+grow_horizontal = 2
+grow_vertical = 0
+custom_fonts/font = ExtResource( 3 )
+text = "Aang
+"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="state" type="Label" parent="."]
+visible = false
+margin_left = -10.6666
+margin_top = -61.6913
+margin_right = 17.3334
+margin_bottom = -36.6913
+grow_horizontal = 2
+grow_vertical = 2
+custom_fonts/font = ExtResource( 3 )
+text = "state
+"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="arrow" type="Sprite" parent="."]
+visible = false
+position = Vector2( 1.33529, -13.1042 )
+texture = ExtResource( 12 )
+
+[node name="Grenade" type="Node2D" parent="."]
+position = Vector2( 0, 3 )
+
+[node name="cross_hair" type="TextureRect" parent="Grenade"]
+visible = false
+margin_left = 14.0
+margin_top = -6.27557
+margin_right = 11.0
+margin_bottom = 5.0
+texture = ExtResource( 13 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="aim_point" type="Node2D" parent="Grenade"]
+position = Vector2( 19.5061, -0.486577 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+playback_speed = 0.5
+anims/idle = SubResource( 2 )
+anims/walk = SubResource( 3 )
